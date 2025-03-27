@@ -1,49 +1,36 @@
-# Tax Calculator Web Application
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-This is a web application for calculating taxes based on annual gross income, extra income, deductions, and age. The application ensures that only numerical input is accepted in relevant fields, shows error icons for invalid inputs, restricts age to be under 500, and provides live tracking of values with automatic formatting for better user experience.
+## Getting Started
 
-## Features
+First, run the development server:
 
-1. **Numerical Input Validation:** Text boxes only accept numerical input, and if a user tries to enter characters, it displays an error icon and message.
-2. **Age Restriction:** If the user enters an age greater than 500, an error is displayed to notify the user.
-3. **Live Tracking and Formatting:** The input values are live-tracked, and whenever a user enters a value, it automatically formats it with commas for better readability.
-4. **Edge Case Handling:** The application handles edge cases such as negative inputs for income and age, displaying appropriate error messages.
-5. **Tax Calculation:** Taxes are calculated based on the provided inputs according to predefined tax rates.
-
-## Usage
-
-To run the application locally:
-
-1. Clone this repository to your local machine.
 ```bash
-git clone https://github.com/AjayDattu/Tax-calculator.git
-cd Tax-calculator
-start index.html
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Demo
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can view the live demo of the Tax Calculator web application [here](https://tax-application-ajaydattu.netlify.app/).
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-## Screenshots
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Learn More
 
-![Screenshot 2024-04-17 120655](https://github.com/AjayDattu/Tax-calculator/assets/126608028/3926def0-c894-4988-bd75-06bae147e636)
+To learn more about Next.js, take a look at the following resources:
 
-![Screenshot 2024-04-17 120723](https://github.com/AjayDattu/Tax-calculator/assets/126608028/41162419-8d32-4867-a484-07ab68652819)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Tests
-![Screenshot 2024-04-17 120758](https://github.com/AjayDattu/Tax-calculator/assets/126608028/ed1588eb-ef4c-4ea3-8bcd-ef63eaf9c86e)
-## Contributing
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Contributions are welcome! Please feel free to open issues or submit pull requests.[MIT License]((https://github.com/AjayDattu)).
+## Deploy on Vercel
 
-## User Profile
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-- **Name:** Ajay Dattu
-- **Location:** Bhimavaram
-- **Bio:** I'm Ajay Dattu, currently studying prefinal BTech. I'm passionate about coding and development, with a specialization in web development.
-- **GitHub:** [AjayDattu](https://github.com/AjayDattu)
-- **LinkedIn:** [Ajay Dattu](https://www.linkedin.com/in/ajaydattu005)
-
-
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
