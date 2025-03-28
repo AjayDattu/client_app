@@ -23,6 +23,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+ 
           <SignedOut>
             <RedirectToSignIn />
           </SignedOut>

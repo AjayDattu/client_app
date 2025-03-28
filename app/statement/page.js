@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Tabs, message, Row, Col } from 'antd';
-
+import { Tabs, message } from 'antd';
+import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import TextField from '@mui/material/TextField';
 const transportSchema = z.object({
   tsr: z.string().min(1, 'TSR ID is required'),
   driver: z.string().min(1, 'Driver name is required'),
@@ -94,94 +96,106 @@ export default function TransportForm() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <Row gutter={[16, 16]}>
-                <Col span={24} className="flex justify-end">
-                  <div className="w-full md:w-1/4">
-                    <Label htmlFor="date">Date</Label>
-                    <Input 
-                      id="date" 
-                      type="date" 
-                      {...register('date')} 
-                      className={errors.date ? 'border-red-500' : ''}
+              {/* Row 1: TSR ID (Full width) */}
+              <div className="flex gap-4">
+                <div className="flex-1 w-[50%]">
+                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <MobileDatePicker
+                      value={dayjs(value)}
+                      onChange={(newValue) => onChange(newValue)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          error={!!error}
+                          helperText={error?.message}
+                          sx={{
+                            '& .MuiInputBase-root': {
+                              height: '40px',
+                              borderRadius: '6px',
+                            }
+                          }}
+                        />
+                      )}
                     />
-                    {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>}
-                  </div>
-                </Col>
-                
-                <Col span={24}>
-                  <Label htmlFor="tsr">TSR ID</Label>
-                  <Input 
-                    id="tsr" 
-                    {...register('tsr')} 
-                    className={errors.tsr ? 'border-red-500' : ''}
-                  />
-                  {errors.tsr && <p className="text-red-500 text-xs mt-1">{errors.tsr.message}</p>}
-                </Col>
+                  </LocalizationProvider>
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="tsr">TSR Name<span className="text-red-500">*</span></Label>
+                <Input 
+                  id="tsr" 
+                  {...register('tsr')} 
+                  className={errors.tsr ? 'border-red-500' : ''}
+                />
+              </div>
 
-                <Col xs={24} md={8}>
-                  <Label htmlFor="driver">Driver Name</Label>
+              {/* Row 2: Driver & Dispatcher (50/50 split) */}
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="driver">Driver <span className="text-red-500">*</span></Label>
                   <Input 
                     id="driver" 
                     {...register('driver')} 
                     className={errors.driver ? 'border-red-500' : ''}
                   />
-                  {errors.driver && <p className="text-red-500 text-xs mt-1">{errors.driver.message}</p>}
-                </Col>
-                
-                <Col xs={24} md={8}>
-                  <Label htmlFor="dispatcher">Dispatcher Name</Label>
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="dispatcher">Dispatcher <span className="text-red-500">*</span></Label>
                   <Input 
                     id="dispatcher" 
                     {...register('dispatcher')} 
                     className={errors.dispatcher ? 'border-red-500' : ''}
                   />
-                  {errors.dispatcher && <p className="text-red-500 text-xs mt-1">{errors.dispatcher.message}</p>}
-                </Col>
-                
-                <Col xs={24} md={8}>
-                  <Label htmlFor="number_plate">Number Plate</Label>
+                </div>
+              </div>
+
+              {/* Row 3: Number Plate & Route (50/50 split) */}
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="number_plate">Plate No. <span className="text-red-500">*</span></Label>
                   <Input 
                     id="number_plate" 
                     {...register('number_plate')} 
                     className={errors.number_plate ? 'border-red-500' : ''}
                   />
-                  {errors.number_plate && <p className="text-red-500 text-xs mt-1">{errors.number_plate.message}</p>}
-                </Col>
-
-                <Col span={24}>
-                  <Label htmlFor="routenumber">Route Number</Label>
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="routenumber">Route No. <span className="text-red-500">*</span></Label>
                   <Input 
                     id="routenumber" 
                     {...register('routenumber')} 
                     className={errors.routenumber ? 'border-red-500' : ''}
                   />
-                  {errors.routenumber && <p className="text-red-500 text-xs mt-1">{errors.routenumber.message}</p>}
-                </Col>
+                </div>
+              </div>
 
-                <Col xs={24} md={12}>
-                  <Label htmlFor="sreading">Start Reading</Label>
+              {/* Row 4: Start & End Readings (50/50 split) */}
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="sreading">Start KM <span className="text-red-500">*</span></Label>
                   <Input 
                     id="sreading" 
                     type="number" 
                     {...register('sreading', { valueAsNumber: true })} 
                     className={errors.sreading ? 'border-red-500' : ''}
                   />
-                  {errors.sreading && <p className="text-red-500 text-xs mt-1">{errors.sreading.message}</p>}
-                </Col>
-                
-                <Col xs={24} md={12}>
-                  <Label htmlFor="dreading">Destination Reading</Label>
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="dreading">End KM <span className="text-red-500">*</span></Label>
                   <Input 
                     id="dreading" 
                     type="number" 
                     {...register('dreading', { valueAsNumber: true })} 
                     className={errors.dreading ? 'border-red-500' : ''}
                   />
-                  {errors.dreading && <p className="text-red-500 text-xs mt-1">{errors.dreading.message}</p>}
-                </Col>
+                </div>
+              </div>
 
-                <Col xs={24} md={12}>
-                  <Label htmlFor="distance_covered">Distance Covered (km)</Label>
+              {/* Row 5: Distance & Petrol (50/50 split) */}
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="distance_covered">Distance (KM) <span className="text-red-500">*</span></Label>
                   <Input 
                     id="distance_covered" 
                     type="number" 
@@ -189,36 +203,25 @@ export default function TransportForm() {
                     readOnly
                     className="bg-gray-100"
                   />
-                  {errors.distance_covered && <p className="text-red-500 text-xs mt-1">{errors.distance_covered.message}</p>}
-                </Col>
-
-                <Col xs={24} md={12}>
-                  <Label htmlFor="petrolbill">Petrol Bill (KSH)</Label>
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="petrolbill">Petrol (KSH) <span className="text-red-500">*</span></Label>
                   <Input 
                     id="petrolbill" 
                     type="number" 
                     {...register('petrolbill', { valueAsNumber: true })} 
                     className={errors.petrolbill ? 'border-red-500' : ''}
                   />
-                  {errors.petrolbill && <p className="text-red-500 text-xs mt-1">{errors.petrolbill.message}</p>}
-                </Col>
+                </div>
+              </div>
 
-                <Col xs={24} md={12}>
-                  <Label htmlFor="total">Total Earnings (KSH)</Label>
-                  <Input 
-                    id="total" 
-                    type="number" 
-                    {...register('total', { valueAsNumber: true })} 
-                    className={errors.total ? 'border-red-500' : ''}
-                  />
-                  {errors.total && <p className="text-red-500 text-xs mt-1">{errors.total.message}</p>}
-                </Col>
-              </Row>
+              {/* Row 6: Total & Date (50/50 split) */}
+              
 
               <Button 
                 type="submit" 
                 disabled={loading} 
-                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg"
               >
                 {loading ? 'Submitting...' : 'Submit'}
               </Button>
@@ -232,7 +235,7 @@ export default function TransportForm() {
   return (
     <Tabs
       defaultActiveKey="1"
-      className="max-w-4xl mx-auto mt-6"
+      className="max-w-md mx-auto mt-4 px-2"
       items={tabItems}
     />
   );
