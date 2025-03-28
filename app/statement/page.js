@@ -9,9 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Tabs, message } from 'antd';
-import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import TextField from '@mui/material/TextField';
+
 const transportSchema = z.object({
   tsr: z.string().min(1, 'TSR ID is required'),
   driver: z.string().min(1, 'Driver name is required'),
@@ -98,27 +96,14 @@ export default function TransportForm() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Row 1: TSR ID (Full width) */}
               <div className="flex gap-4">
-                <div className="flex-1 w-[50%]">
-                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <MobileDatePicker
-                      value={dayjs(value)}
-                      onChange={(newValue) => onChange(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          error={!!error}
-                          helperText={error?.message}
-                          sx={{
-                            '& .MuiInputBase-root': {
-                              height: '40px',
-                              borderRadius: '6px',
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
+                <div className="flex-1">
+                  <Label htmlFor="date">Date <span className="text-red-500">*</span></Label>
+                  <Input 
+                    id="date" 
+                    type="date" 
+                    {...register('date')} 
+                    className={errors.date ? 'border-red-500' : ''}
+                  />
                 </div>
               </div>
               <div>
