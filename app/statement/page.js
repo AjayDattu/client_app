@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
-import TransportForm from "@/components/organisms/TransportForm";
-import STransport from "@/components/organisms/STransport";
+import TransportForm from "@/components/organisms/transport/TransportForm";
+import STransport from "@/components/organisms/transport/STransport";
 
 export default function Page() {
   return (

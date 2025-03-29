@@ -18,7 +18,7 @@ export default function Home() {
       <div className="grid grid-cols-2 gap-3 p-4 w-full max-w-md">
         {/* Large Left Item (Spans 2 Rows) */}
         <Link href="/statement" className="row-span-2">
-          <Card className="flex flex-col items-left justify-center p-4 shadow-lg bg-white/10 border border-purple-300/50 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer">
+          <Card className="flex flex-col items-left justify-center p-4 shadow-lg bg-white/10 border h-[40vh] border-purple-300/50 rounded-xl transition-transform duration-300 hover:scale-105 cursor-pointer">
             <CardContent className="flex flex-col items-left gap-3">
               <p className="text-[1.3rem] font-semibold text-left text-black">
                 Daily Statements

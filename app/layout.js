@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import BottomNavbar from '@/components/organisms/BootomNavbar'
+import BottomNavbar from '@/components/organisms/Navbar/BootomNavbar'
 import { Toaster } from 'sonner';
 
 
