@@ -7,9 +7,9 @@ import Home from '@/components/pages/home';
 import { User } from 'lucide-react';
 function page() {
   return (
-   <>
+   <div>
     <Home/>
-   </>
+   </div>
   )
 }
 
