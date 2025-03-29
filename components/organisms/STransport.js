@@ -1,8 +1,6 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Collapse, Card, Alert } from "antd";
-
 const STransport = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);

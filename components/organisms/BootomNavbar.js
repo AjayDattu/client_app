@@ -10,7 +10,7 @@ const BottomNavbar = () => {
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-700 p-2 flex justify-around shadow-lg"
+      className="fixed bottom-0 left-0 w-full z-[999] bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-700 p-2 flex justify-around shadow-lg"
     >
       <Button variant="ghost" size="icon">
         <Home className="h-6 w-6" />

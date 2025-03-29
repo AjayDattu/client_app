@@ -1,4 +1,3 @@
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn,UserButton } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import BottomNavbar from '@/components/organisms/BootomNavbar'
@@ -22,22 +21,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Toaster position="top-center" />
-          <SignedOut>
-            <RedirectToSignIn />
-          </SignedOut>
-          <SignedIn>
-            <header className="flex justify-end items-center p-4 gap-4 h-full sticky top-0 z-[50] dark:bg-gray-900 shadow-lg backdrop-blur-md bg-opacity-30 ">
-              <UserButton />
-            </header>
-            {children}
-            <BottomNavbar />
-          </SignedIn>
-        </body>
+             {children}
+             <BottomNavbar/>
+           </body>
       </html>
-    </ClerkProvider>
   )
 }
