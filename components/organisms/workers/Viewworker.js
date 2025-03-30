@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
+import Loader from "@/components/ui/Loader";
 const ViewWorkers = () => {
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,9 +67,7 @@ const ViewWorkers = () => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-        <Spin size="large" />
-      </div>
+      <Loader/>
     );
   }
 
