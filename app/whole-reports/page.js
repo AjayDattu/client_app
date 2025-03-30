@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Select, Collapse, Table, Typography, Statistic, Row, Col, Divider, Empty, Spin } from 'antd';
 import { CarOutlined, CalendarOutlined, DollarOutlined, DashboardOutlined } from '@ant-design/icons';
-import axios from 'axios';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -21,16 +20,23 @@ const Page = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
-        
-        // Process the data
-        const data = response.data.map(item => ({
-          ...item,
-          date: new Date(item.date),
-          key: item._id
-        }));
-        
-        setTransportData(data);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
+
+if (!response.ok) {
+  throw new Error(`HTTP error! Status: ${response.status}`);
+}
+
+const rawData = await response.json();
+
+// Process the data
+const data = rawData.map(item => ({
+  ...item,
+  date: new Date(item.date),
+  key: item._id
+}));
+
+setTransportData(data);
+
         
         // Extract unique dates and format them
         const dates = [...new Set(data.map(item => 
