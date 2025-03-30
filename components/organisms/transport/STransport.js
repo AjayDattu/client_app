@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { Collapse, Card, Alert, Button, Spin, Modal } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import Loader from "@/components/ui/Loader";
-
+import { toast } from "sonner";
 const STransport = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  
   const currentDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
 
   useEffect(() => {
@@ -19,10 +20,12 @@ const STransport = () => {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`
         );
         const data = await response.json();
-        const filteredData = data.filter(
-          (record) => record.date.split("T")[0] === currentDate
+
+        const filteredData = data?.filter(
+          (record) => record?.date?.split("T")[0] === currentDate
         );
-        setRecords(filteredData);
+
+        setRecords(filteredData || []);
       } catch (error) {
         console.error("Error fetching records:", error);
       } finally {
@@ -31,7 +34,7 @@ const STransport = () => {
     };
 
     fetchRecords();
-  }, []);
+  }, [currentDate]); // ✅ Added `currentDate` as a dependency
 
   const showDeleteModal = (record) => {
     setSelectedRecord(record);
@@ -42,15 +45,17 @@ const STransport = () => {
     if (!selectedRecord) return;
     setDeleting(selectedRecord._id);
     setIsModalOpen(false);
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/transports/${selectedRecord._id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
+
       if (response.ok) {
-        setRecords((prevRecords) => prevRecords.filter((record) => record._id !== selectedRecord._id));
+        setRecords((prevRecords) =>
+          prevRecords.filter((record) => record._id !== selectedRecord._id)
+        );
       } else {
         console.error("Failed to delete record");
       }
@@ -72,9 +77,7 @@ const STransport = () => {
   return (
     <div className="relative">
       {/* Loading Overlay */}
-      {loading && (
-        <Loader/>
-      )}
+      {loading && <Loader />}
 
       <Card className="p-4">
         <h2 className="text-lg text-center mb-4">Submitted Transport Records</h2>
@@ -83,12 +86,12 @@ const STransport = () => {
           <Collapse
             accordion
             className="w-full"
-            items={Object.entries(groupedRecords).map(([route, records]) => ({
+            items={Object.entries(groupedRecords).map(([route, routeRecords]) => ({
               key: route,
               label: `Route ${route}`,
               children: (
                 <div className="space-y-4">
-                  {records.map((record) => (
+                  {routeRecords.map((record) => (
                     <Card key={record._id} className="p-3 shadow-md rounded-md">
                       <p><strong>TSR:</strong> {record.tsr}</p>
                       <p><strong>Driver:</strong> {record.driver}</p>

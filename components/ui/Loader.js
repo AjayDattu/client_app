@@ -1,13 +1,10 @@
-import React from "react";
-import Lottie from "lottie-react";
-import animationData from "@/public/Loader.json";
+'use client'
+import React from 'react'
 
-const Loader = () => {
+function Loader() {
   return (
-    <div className="flex justify-center items-center h-screen backdrop-blur-lg">
-      <Lottie animationData={animationData} loop={true} className="w-64 h-64" />
-    </div>
-  );
-};
+    <div>Loader</div>
+  )
+}
 
-export default Loader;
+export default Loader

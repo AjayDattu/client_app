@@ -8,7 +8,7 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
-const TransportationInfo = () => {
+const Page = () => {
   const [transportData, setTransportData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -265,4 +265,4 @@ const TransportationInfo = () => {
   );
 };
 
-export default TransportationInfo;
+export default Page;

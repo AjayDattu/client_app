@@ -9,7 +9,7 @@ const { Title, Text } = Typography;
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 
-const TransportationInfo = () => {
+const Page = () => {
   const [transportData, setTransportData] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -468,4 +468,4 @@ const TransportationInfo = () => {
   );
 };
 
-export default TransportationInfo;
+export default Page;
