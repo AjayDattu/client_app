@@ -17,8 +17,8 @@ export default function Page() {
               className={({ selected }) =>
                 `flex-1 py-2 text-center font-medium transition-all duration-200 ${
                   selected
-                    ? "border-b-2 border-blue-600 text-blue-600"
-                    : "text-gray-500 hover:text-blue-600"
+                    ? "border-b-2 border-purple-600 text-purple-600"
+                    : "text-gray-500 hover:text-purple-500"
                 }`
               }
             >

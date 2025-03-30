@@ -2,35 +2,40 @@
 import React, { useState } from 'react';
 import AddWorkForm from '@/components/organisms/workers/AddWorker';
 import ViewWorkers from '@/components/organisms/workers/Viewworker';
+import { Tab } from "@headlessui/react";
 
-function Page() {
-  const [activeTab, setActiveTab] = useState('addWork');
-
+export default function Page() {
   return (
-    <div className="flex flex-col justify-center items-center flex-grow mb-9 space-y-8">
-      {/* Tab Buttons */}
-      <div className="mb-4 flex border-b border-gray-300 w-full max-w-3xl justify-center space-x-6">
-        <button
-          className={`p-3 text-lg font-semibold transition-colors ${activeTab === 'addWork' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
-          onClick={() => setActiveTab('addWork')}
-        >
-          Add Work
-        </button>
-        <button
-          className={`p-3 text-lg font-semibold transition-colors ${activeTab === 'viewWorkers' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600 hover:text-blue-500'}`}
-          onClick={() => setActiveTab('viewWorkers')}
-        >
-          View Workers
-        </button>
-      </div>
-      
-      {/* Render Active Tab */}
-      <div className="w-full max-w-3xl px-4">
-        {activeTab === 'addWork' && <AddWorkForm />}
-        {activeTab === 'viewWorkers' && <ViewWorkers />}
-      </div>
+    <div className="max-w-3xl mx-auto">
+      <Tab.Group>
+        {/* Tabs Navigation */}
+        <Tab.List className="flex space-x-2 border-b-2 border-gray-200">
+          {["Add Work", "viewWorkers"].map((tab, index) => (
+            <Tab
+              key={index}
+              className={({ selected }) =>
+                `flex-1 py-2 text-center font-medium transition-all duration-200 ${
+                  selected
+                    ? "border-b-2 border-purple-600 text-purple-600"
+                    : "text-gray-500 hover:text-purple-400"
+                }`
+              }
+            >
+              {tab}
+            </Tab>
+          ))}
+        </Tab.List>
+
+        {/* Tabs Content */}
+        <Tab.Panels className="mt-4">
+          <Tab.Panel>
+            <AddWorkForm />
+          </Tab.Panel>
+          <Tab.Panel>
+            <ViewWorkers />
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
     </div>
   );
 }
-
-export default Page;

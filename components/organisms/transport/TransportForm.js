@@ -120,7 +120,7 @@ export default function TransportForm() {
           </div>
 
           {/* Driver & Dispatcher Selection */}
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-col">
             <div className="flex-1">
               <Label htmlFor="driver">
                 Driver<span className="text-red-500">*</span>
