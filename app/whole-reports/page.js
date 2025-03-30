@@ -1,7 +1,9 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Card, Select, Collapse, Table, Typography, Statistic, Row, Col, Divider, Empty, Spin } from 'antd';
+import { Card, Select, Collapse, Table, Typography, Statistic, Row, Col, Divider, Empty, Spin, DatePicker } from 'antd';
 import { CarOutlined, CalendarOutlined, DollarOutlined, DashboardOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import Loader from '@/components/ui/Loader';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -22,21 +24,20 @@ const Page = () => {
         setLoading(true);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
 
-if (!response.ok) {
-  throw new Error(`HTTP error! Status: ${response.status}`);
-}
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-const rawData = await response.json();
+        const rawData = await response.json();
 
-// Process the data
-const data = rawData.map(item => ({
-  ...item,
-  date: new Date(item.date),
-  key: item._id
-}));
+        // Process the data
+        const data = rawData.map(item => ({
+          ...item,
+          date: new Date(item.date),
+          key: item._id
+        }));
 
-setTransportData(data);
-
+        setTransportData(data);
         
         // Extract unique dates and format them
         const dates = [...new Set(data.map(item => 
@@ -69,7 +70,7 @@ setTransportData(data);
     let filtered = [...transportData];
     
     if (selectedDate) {
-      const dateStr = selectedDate;
+      const dateStr = typeof selectedDate === 'string' ? selectedDate : selectedDate.format('YYYY-MM-DD');
       filtered = filtered.filter(item => 
         item.date.toISOString().split('T')[0] === dateStr
       );
@@ -82,8 +83,8 @@ setTransportData(data);
     setFilteredData(filtered);
   }, [selectedDate, selectedRoute, transportData]);
 
-  const handleDateChange = (value) => {
-    setSelectedDate(value);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
   const handleRouteChange = (value) => {
@@ -141,13 +142,15 @@ setTransportData(data);
     }
   ];
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+  // Function to handle DatePicker's disabledDate prop
+  const disabledDate = (current) => {
+    // Only enable dates that exist in our dataset
+    const dateString = current.format('YYYY-MM-DD');
+    return !uniqueDates.includes(dateString);
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 mb-5">
       <Card 
         title={<Title level={4}><CarOutlined /> Transportation Data</Title>} 
         bordered={false}
@@ -156,17 +159,15 @@ setTransportData(data);
         <Row gutter={16} className="mb-4">
           <Col xs={24} sm={12}>
             <Text strong><CalendarOutlined /> Select Date:</Text>
-            <Select
+            <DatePicker
               style={{ width: '100%' }}
               placeholder="Select a date"
               onChange={handleDateChange}
-              value={selectedDate}
+              value={selectedDate ? dayjs(selectedDate) : null}
+              disabledDate={disabledDate}
               className="mt-2"
-            >
-              {uniqueDates.map(date => (
-                <Option key={date} value={date}>{formatDate(date)}</Option>
-              ))}
-            </Select>
+              format="MMMM D, YYYY"
+            />
           </Col>
           <Col xs={24} sm={12}>
             <Text strong><DashboardOutlined /> Select Route:</Text>
@@ -188,9 +189,7 @@ setTransportData(data);
         <Divider />
 
         {loading ? (
-          <div className="flex justify-center p-8">
-            <Spin size="large" tip="Loading transportation data..." />
-          </div>
+          <Loader/>
         ) : filteredData.length > 0 ? (
           <>
             <Row gutter={16} className="mb-4">
@@ -236,7 +235,7 @@ setTransportData(data);
                         <p><strong>Driver:</strong> {item.driver}</p>
                         <p><strong>Dispatcher:</strong> {item.dispatcher}</p>
                         <p><strong>Number Plate:</strong> {item.number_plate}</p>
-                        <p><strong>Date:</strong> {new Date(item.date).toLocaleDateString()}</p>
+                        <p><strong>Date:</strong> {dayjs(item.date).format('MMMM D, YYYY')}</p>
                       </Card>
                     </Col>
                     <Col xs={24} md={12}>

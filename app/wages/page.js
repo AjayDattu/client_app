@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Select, Collapse, Table, Typography, Statistic, Row, Col, Divider, Empty, Spin, DatePicker, Space, Button, Radio } from 'antd';
 import { CarOutlined, CalendarOutlined, DollarOutlined, DashboardOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs'; // Import dayjs for date handling
+import Loader from '@/components/ui/Loader';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -12,9 +14,8 @@ const Page = () => {
   const [transportData, setTransportData] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDateSingle, setSelectedDateSingle] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [uniqueDates, setUniqueDates] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [dateRange, setDateRange] = useState(null);
   const [isDateRangeMode, setIsDateRangeMode] = useState(false);
@@ -56,35 +57,25 @@ const Page = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
 
-if (!response.ok) {
-  throw new Error(`HTTP error! Status: ${response.status}`);
-}
-
-const rawData = await response.json();
-
-// Process the data
-const data = rawData.map(item => ({
-  ...item,
-  date: new Date(item.date),
-  key: item._id
-}));
-
-setTransportData(data);
-
-        
-        // Extract unique dates and format them
-        const dates = [...new Set(data.map(item => 
-          item.date.toISOString().split('T')[0]
-        ))].sort((a, b) => new Date(b) - new Date(a));
-        
-        setUniqueDates(dates);
-        
-        // Set default selections
-        if (dates.length > 0) {
-          setSelectedDate(dates[0]);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        const rawData = await response.json();
+
+        // Process the data
+        const data = rawData.map(item => ({
+          ...item,
+          date: new Date(item.date),
+          key: item._id
+        }));
+
+        setTransportData(data);
+        
+        // Set default to today's date using dayjs
+        setSelectedDateSingle(dayjs());
         
         setLoading(false);
       } catch (error) {
@@ -102,32 +93,29 @@ setTransportData(data);
     
     if (isDateRangeMode) {
       if (isMobile && startDate && endDate) {
-        // Convert individual dates to start and end dates
-        const start = new Date(startDate);
-        start.setHours(0, 0, 0, 0);
-        
-        const end = new Date(endDate);
-        end.setHours(23, 59, 59, 999);
+        // Convert individual dates from dayjs to Date objects for comparison
+        const start = startDate.startOf('day').toDate();
+        const end = endDate.endOf('day').toDate();
         
         filtered = filtered.filter(item => 
           item.date >= start && item.date <= end
         );
       } else if (!isMobile && dateRange && dateRange[0] && dateRange[1]) {
-        // Convert dateRange to start and end dates for desktop
-        const start = new Date(dateRange[0]);
-        start.setHours(0, 0, 0, 0);
-        
-        const end = new Date(dateRange[1]);
-        end.setHours(23, 59, 59, 999);
+        // Convert dateRange from dayjs to Date objects for comparison
+        const start = dateRange[0].startOf('day').toDate();
+        const end = dateRange[1].endOf('day').toDate();
         
         filtered = filtered.filter(item => 
           item.date >= start && item.date <= end
         );
       }
-    } else if (!isDateRangeMode && selectedDate) {
-      const dateStr = selectedDate;
+    } else if (!isDateRangeMode && selectedDateSingle) {
+      // For single date selection using dayjs
+      const startOfDay = selectedDateSingle.startOf('day').toDate();
+      const endOfDay = selectedDateSingle.endOf('day').toDate();
+      
       filtered = filtered.filter(item => 
-        item.date.toISOString().split('T')[0] === dateStr
+        item.date >= startOfDay && item.date <= endOfDay
       );
     }
     
@@ -144,10 +132,10 @@ setTransportData(data);
     filtered.sort((a, b) => b.date - a.date);
     
     setFilteredData(filtered);
-  }, [selectedDate, selectedUser, transportData, dateRange, isDateRangeMode, startDate, endDate, isMobile]);
+  }, [selectedDateSingle, selectedUser, transportData, dateRange, isDateRangeMode, startDate, endDate, isMobile]);
 
-  const handleDateChange = (value) => {
-    setSelectedDate(value);
+  const handleSingleDateChange = (date) => {
+    setSelectedDateSingle(date); // This will be a dayjs object or null
   };
 
   const handleUserChange = (value) => {
@@ -171,11 +159,13 @@ setTransportData(data);
     setIsDateRangeMode(newMode);
     // Reset the other date selection mode when switching
     if (newMode) {
-      setSelectedDate(null);
+      setSelectedDateSingle(null);
     } else {
       setDateRange(null);
       setStartDate(null);
       setEndDate(null);
+      // Set default to today when switching to single date
+      setSelectedDateSingle(dayjs());
     }
   };
 
@@ -248,9 +238,14 @@ setTransportData(data);
     }
   ];
 
-  const formatDate = (dateString) => {
+  const formatDate = (date) => {
+    if (!date) return '';
+    
+    // If it's a dayjs object, convert to JS Date
+    const jsDate = dayjs.isDayjs(date) ? date.toDate() : new Date(date);
+    
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    return jsDate.toLocaleDateString(undefined, options);
   };
 
   return (
@@ -338,23 +333,16 @@ setTransportData(data);
                 </>
               )
             ) : (
-              // Single date selector (same for mobile and desktop)
+              // Single date selector using DatePicker
               <>
                 <Text strong>Select Date:</Text>
-                <Select
+                <DatePicker
                   style={{ width: '100%', marginTop: '8px' }}
+                  onChange={handleSingleDateChange}
+                  value={selectedDateSingle}
+                  format="YYYY-MM-DD"
                   placeholder="Select a date"
-                  onChange={handleDateChange}
-                  value={selectedDate}
-                  showSearch
-                  optionFilterProp="children"
-                  dropdownMatchSelectWidth={false}
-                  dropdownStyle={{ minWidth: '200px' }}
-                >
-                  {uniqueDates.map(date => (
-                    <Option key={date} value={date}>{formatDate(date)}</Option>
-                  ))}
-                </Select>
+                />
               </>
             )}
           </Col>
@@ -363,9 +351,7 @@ setTransportData(data);
         <Divider style={{ margin: '12px 0' }}/>
 
         {loading ? (
-          <div className="flex justify-center items-center p-4">
-            <Spin size="large" tip="Loading transportation data..." />
-          </div>
+          <Loader/>
         ) : filteredData.length > 0 ? (
           <>
             <div className="bg-gray-50 p-3 rounded-lg mb-4">
@@ -464,7 +450,7 @@ setTransportData(data);
               selectedUser ? 
                 (isDateRangeMode ? 
                   `No data for ${selectedUser} in selected date range` : 
-                  `No data for ${selectedUser} on ${selectedDate ? formatDate(selectedDate) : 'selected date'}`) : 
+                  `No data for ${selectedUser} on ${selectedDateSingle ? formatDate(selectedDateSingle) : 'selected date'}`) : 
                 "No data for selected filters"
             }
             className="my-8" 

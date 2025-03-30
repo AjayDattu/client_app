@@ -76,7 +76,7 @@ const ViewWorkers = () => {
   }
 
   return (
-    <div className="p-4 bg-white shadow-lg rounded-lg max-w-3xl mx-auto mt-8">
+    <div className="p-4 bg-white shadow-lg rounded-lg max-w-3xl mx-auto mt-8 mb-10">
       <h2 className="text-2xl font-semibold text-center text-purple-600">
         List of Workers
       </h2>
