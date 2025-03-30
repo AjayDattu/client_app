@@ -7,7 +7,7 @@ import STransport from "@/components/organisms/transport/STransport";
 
 export default function Page() {
   return (
-    <div className="max-w-3xl mx-auto p-6 h-screen">
+    <div className="max-w-3xl mx-auto p-6">
       <Tab.Group>
         {/* Tabs Navigation */}
         <Tab.List className="flex space-x-2 border-b-2 border-gray-200">

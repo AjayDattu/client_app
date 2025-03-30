@@ -7,7 +7,7 @@ import Home from '@/components/pages/home';
 import { User } from 'lucide-react';
 function page() {
   return (
-   <div>
+   <div className='mb-20 bg-gray-100'>
     <Home/>
    </div>
   )

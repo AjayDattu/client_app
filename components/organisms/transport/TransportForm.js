@@ -26,7 +26,9 @@ export default function TransportForm() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/users`
+        );
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || "Failed to fetch users");
@@ -44,7 +46,12 @@ export default function TransportForm() {
       setValue("distance_covered", dreading - sreading);
     }
   }, [sreading, dreading, setValue]);
+  const uniqueUsers = users.filter(
+    (user, index, self) =>
+      index === self.findIndex((u) => u.name === user.name)
+  );
 
+      
   const onSubmit = async (formData) => {
     setLoading(true);
     console.log("Form Data Submitted:", formData);
@@ -78,14 +85,18 @@ export default function TransportForm() {
   };
 
   return (
-    <Card className="p-4 shadow-lg rounded-lg">
+    <Card className="p-4 shadow-lg rounded-lg mb-20">
       <CardHeader>
-        <CardTitle className="text-lg text-center">Submit Transport Route</CardTitle>
+        <CardTitle className="text-lg text-center">
+          Submit Transport Route
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {Object.keys(errors).length > 0 && (
-            <div className="text-red-500">Form has errors! Please check inputs.</div>
+            <div className="text-red-500">
+              Form has errors! Please check inputs.
+            </div>
           )}
 
           {/* TSR Selection */}
@@ -93,10 +104,14 @@ export default function TransportForm() {
             <Label htmlFor="tsr">
               TSR Name<span className="text-red-500">*</span>
             </Label>
-            <select id="tsr" {...register("tsr", { required: "TSR ID is required" })} className="w-full border rounded p-2">
+            <select
+              id="tsr"
+              {...register("tsr", { required: "TSR ID is required" })}
+              className="w-full border rounded p-2"
+            >
               <option value="">Select TSR</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.name}>
+              {uniqueUsers.map((user) => (
+                <option key={user.name} value={user.name}>
                   {user.name}
                 </option>
               ))}
@@ -110,29 +125,41 @@ export default function TransportForm() {
               <Label htmlFor="driver">
                 Driver<span className="text-red-500">*</span>
               </Label>
-              <select id="driver" {...register("driver", { required: "Driver name is required" })} className="w-full border rounded p-2">
-                <option value="">Select Driver</option>
-                {users.map((user) => (
-                  <option key={user.id} value={user.name}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-              {errors.driver && <p className="text-red-500">{errors.driver.message}</p>}
+              <select
+              id="driver"
+              {...register("driver", { required: "TSR ID is required" })}
+              className="w-full border rounded p-2"
+            >
+              <option value="">Select driver</option>
+              {uniqueUsers.map((user) => (
+                <option key={user.name} value={user.name}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+              {errors.driver && (
+                <p className="text-red-500">{errors.driver.message}</p>
+              )}
             </div>
             <div className="flex-1">
               <Label htmlFor="dispatcher">
                 Dispatcher<span className="text-red-500">*</span>
               </Label>
-              <select id="dispatcher" {...register("dispatcher", { required: "Dispatcher name is required" })} className="w-full border rounded p-2">
-                <option value="">Select Dispatcher</option>
-                {users.map((user) => (
-                  <option key={user.id} value={user.name}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-              {errors.dispatcher && <p className="text-red-500">{errors.dispatcher.message}</p>}
+              <select
+              id="dispatcher"
+              {...register("dispatcher", { required: "TSR ID is required" })}
+              className="w-full border rounded p-2"
+            >
+              <option value="">Select dispatcher</option>
+              {uniqueUsers.map((user) => (
+                <option key={user.name} value={user.name}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+              {errors.dispatcher && (
+                <p className="text-red-500">{errors.dispatcher.message}</p>
+              )}
             </div>
           </div>
 
@@ -140,13 +167,27 @@ export default function TransportForm() {
           <div className="flex gap-4">
             <div className="flex-1">
               <Label htmlFor="number_plate">Plate No.</Label>
-              <Input id="number_plate" {...register("number_plate", { required: "Number plate is required" })} />
-              {errors.number_plate && <p className="text-red-500">{errors.number_plate.message}</p>}
+              <Input
+                id="number_plate"
+                {...register("number_plate", {
+                  required: "Number plate is required",
+                })}
+              />
+              {errors.number_plate && (
+                <p className="text-red-500">{errors.number_plate.message}</p>
+              )}
             </div>
             <div className="flex-1">
               <Label htmlFor="routenumber">Route No.</Label>
-              <Input id="routenumber" {...register("routenumber", { required: "Route number is required" })} />
-              {errors.routenumber && <p className="text-red-500">{errors.routenumber.message}</p>}
+              <Input
+                id="routenumber"
+                {...register("routenumber", {
+                  required: "Route number is required",
+                })}
+              />
+              {errors.routenumber && (
+                <p className="text-red-500">{errors.routenumber.message}</p>
+              )}
             </div>
           </div>
 
@@ -157,43 +198,83 @@ export default function TransportForm() {
               <Controller
                 name="sreading"
                 control={control}
-                rules={{ required: "Start reading is required", min: { value: 1, message: "Must be positive" } }}
-                render={({ field }) => <Input id="sreading" type="number" {...field} />}
+                rules={{
+                  required: "Start reading is required",
+                  min: { value: 1, message: "Must be positive" },
+                }}
+                render={({ field }) => (
+                  <Input id="sreading" type="number" {...field} />
+                )}
               />
-              {errors.sreading && <p className="text-red-500">{errors.sreading.message}</p>}
+              {errors.sreading && (
+                <p className="text-red-500">{errors.sreading.message}</p>
+              )}
             </div>
             <div className="flex-1">
               <Label htmlFor="dreading">Destination Reading</Label>
               <Controller
                 name="dreading"
                 control={control}
-                rules={{ required: "Destination reading is required", min: { value: 1, message: "Must be positive" } }}
-                render={({ field }) => <Input id="dreading" type="number" {...field} />}
+                rules={{
+                  required: "Destination reading is required",
+                  min: { value: 1, message: "Must be positive" },
+                }}
+                render={({ field }) => (
+                  <Input id="dreading" type="number" {...field} />
+                )}
               />
-              {errors.dreading && <p className="text-red-500">{errors.dreading.message}</p>}
+              {errors.dreading && (
+                <p className="text-red-500">{errors.dreading.message}</p>
+              )}
             </div>
           </div>
 
           {/* Distance Covered */}
           <div>
             <Label htmlFor="distance_covered">Distance Covered</Label>
-            <Input id="distance_covered" type="number" {...register("distance_covered")} disabled />
+            <Input
+              id="distance_covered"
+              type="number"
+              {...register("distance_covered")}
+              disabled
+            />
           </div>
 
           {/* Petrol Bill & Total */}
           <div>
             <Label htmlFor="petrolbill">Petrol Bill</Label>
-            <Input id="petrolbill" type="number" {...register("petrolbill", { required: "Petrol bill is required", min: { value: 1, message: "Must be positive" } })} />
-            {errors.petrolbill && <p className="text-red-500">{errors.petrolbill.message}</p>}
+            <Input
+              id="petrolbill"
+              type="number"
+              {...register("petrolbill", {
+                required: "Petrol bill is required",
+                min: { value: 1, message: "Must be positive" },
+              })}
+            />
+            {errors.petrolbill && (
+              <p className="text-red-500">{errors.petrolbill.message}</p>
+            )}
           </div>
           <div>
             <Label htmlFor="total">Total</Label>
-            <Input id="total" type="number" {...register("total", { min: { value: 1, message: "Must be positive" } })} />
-            {errors.total && <p className="text-red-500">{errors.total.message}</p>}
+            <Input
+              id="total"
+              type="number"
+              {...register("total", {
+                min: { value: 1, message: "Must be positive" },
+              })}
+            />
+            {errors.total && (
+              <p className="text-red-500">{errors.total.message}</p>
+            )}
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" disabled={loading} className="w-full mt-6 bg-black hover:bg-gray-700 text-white py-3 rounded-lg">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-6 bg-black hover:bg-gray-700 text-white py-3 rounded-lg"
+          >
             {loading ? "Submitting..." : "Submit"}
           </Button>
         </form>
