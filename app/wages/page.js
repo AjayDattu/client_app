@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Select, Collapse, Table, Typography, Statistic, Row, Col, Divider, Empty, Spin, DatePicker, Space, Button, Radio } from 'antd';
 import { CarOutlined, CalendarOutlined, DollarOutlined, DashboardOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
-import axios from 'axios';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -41,8 +40,9 @@ const Page = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users`);
-        setUsers(response.data);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users`);
+        const data = await response.json();
+        setUsers(data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -56,16 +56,23 @@ const Page = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
-        
-        // Process the data
-        const data = response.data.map(item => ({
-          ...item,
-          date: new Date(item.date),
-          key: item._id
-        }));
-        
-        setTransportData(data);
+       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transports`);
+
+if (!response.ok) {
+  throw new Error(`HTTP error! Status: ${response.status}`);
+}
+
+const rawData = await response.json();
+
+// Process the data
+const data = rawData.map(item => ({
+  ...item,
+  date: new Date(item.date),
+  key: item._id
+}));
+
+setTransportData(data);
+
         
         // Extract unique dates and format them
         const dates = [...new Set(data.map(item => 
