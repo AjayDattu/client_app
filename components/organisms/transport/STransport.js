@@ -29,7 +29,7 @@ const STransport = () => {
       } catch (error) {
         console.error("Error fetching records:", error);
       } finally {
-        setLoading(true);
+        setLoading(false);
       }
     };
 
@@ -38,7 +38,7 @@ const STransport = () => {
 
   const showDeleteModal = (record) => {
     setSelectedRecord(record);
-    setIsModalOpen(false);
+    setIsModalOpen(true);
   };
 
   const handleDelete = async () => {
