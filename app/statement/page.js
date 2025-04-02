@@ -8,9 +8,6 @@ import useAuthGuard from "@/hooks/Authogaurd";
 import Loader from "@/components/ui/Loader";
 
 export default function Page() {
-  const { user, loading } = useAuthGuard();
-
-  if (loading) return   <Loader/>;
   return (
     <div className="max-w-3xl mx-auto p-6">
   

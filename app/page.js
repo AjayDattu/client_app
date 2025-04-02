@@ -47,16 +47,7 @@ export default function Page() {
 
   return (
     <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <Toaster position="top-right" />
-      {user ? (
-        <>
-          <main className="pb-15">
             <Home /> {/* Your main page content */}
-          </main>
-        </>
-      ) : (
-        <Sign/> // Show signup page if no user
-      )}
     </div>
   );
 }

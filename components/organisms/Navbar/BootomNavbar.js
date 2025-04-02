@@ -9,7 +9,7 @@ import useAuthStore from "@/store/authStore"; // Import auth store
 const BottomNavbar = () => {
   const { user } = useAuthStore(); // Get user state
 
-  if (!user) return null; // ✅ If no user, return empty navbar
+  // ✅ If no user, return empty navbar
 
   return (
     <motion.nav

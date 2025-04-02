@@ -32,9 +32,6 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-lg bg-white/30 flex justify-between items-center">
       {/* Logo */}
-
-      {/* User Profile Section */}
-      {user ? (
         <Dropdown overlay={menu} trigger={["click"]}>
           <button className="flex items-center gap-3 px-4 py-2 transition duration-200">
             <img
@@ -44,9 +41,6 @@ export default function Navbar() {
             />
           </button>
         </Dropdown>
-      ) : (
-         <></>
-      )}
     </nav>
   );
 }
