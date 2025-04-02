@@ -46,7 +46,7 @@ export default function Page() {
  // Show a loading state while checking
 
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <div className="pb-18">
             <Home /> {/* Your main page content */}
     </div>
   );
