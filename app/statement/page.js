@@ -4,10 +4,16 @@ import { useState } from "react";
 import { Tab } from "@headlessui/react";
 import TransportForm from "@/components/organisms/transport/TransportForm";
 import STransport from "@/components/organisms/transport/STransport";
+import useAuthGuard from "@/hooks/Authogaurd";
+import Loader from "@/components/ui/Loader";
 
 export default function Page() {
+  const { user, loading } = useAuthGuard();
+
+  if (loading) return   <Loader/>;
   return (
     <div className="max-w-3xl mx-auto p-6">
+  
       <Tab.Group>
         {/* Tabs Navigation */}
         <Tab.List className="flex space-x-2 border-b-2 border-gray-200">
